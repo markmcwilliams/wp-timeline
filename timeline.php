@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Note of interest for anyone reading, I don't know if it even works yet?
+ * I'm open for any, and all, advice, pointers, help to get me in the WP.org repo!
+ * Thanks - Mark
+ */
+
+/**
  * Plugin Name: Timeline
  * Plugin URI:  http://mark.mcwilliams.me/wordpress/timeline-plugin/
  * Description: Record and display events from the past, present, and future!
