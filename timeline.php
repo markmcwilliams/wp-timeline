@@ -15,4 +15,16 @@
  * Domain Path: /languages/
  */
 
+class Timeline {
+
+	/* Magic code in here! */
+
+	public function __construct() {
+
+		/* Register initial stuffs! */
+
+	}
+
+}
+
 ?>
