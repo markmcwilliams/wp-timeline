@@ -23,7 +23,7 @@ class Timeline {
 
 		/* Register initial stuffs! */
 
-		add_action( 'init', 'register_timeline_post_type');
+		add_action( 'init', 'register_timeline_post_type' );
 
 	}
 
@@ -32,16 +32,16 @@ class Timeline {
 		/* Probably lacking some code? */
 
 		$labels = array(
-			'name'               => __( 'Timeline',                 'timeline' ),
-			'menu_name'          => __( 'Timeline',                 'timeline' ),
-			'singular_name'      => __( 'Timeline',                 'timeline' ),
-			'all_items'          => __( 'All Timelines',            'timeline' ),
-			'add_new'            => __( 'New Timeline',             'timeline' ),
-			'add_new_item'       => __( 'Create New Timeline',      'timeline' ),
-			'edit'               => __( 'Edit',                     'timeline' ),
-			'edit_item'          => __( 'Edit Timeline',            'timeline' ),
-			'new_item'           => __( 'New Timeline',             'timeline' ),
-			'search_items'       => __( 'Search Timelines',         'timeline' )
+			'name'               => __( 'Timeline',            'timeline' ),
+			'menu_name'          => __( 'Timeline',            'timeline' ),
+			'singular_name'      => __( 'Timeline',            'timeline' ),
+			'all_items'          => __( 'All Timelines',       'timeline' ),
+			'add_new'            => __( 'New Timeline',        'timeline' ),
+			'add_new_item'       => __( 'Create New Timeline', 'timeline' ),
+			'edit'               => __( 'Edit',                'timeline' ),
+			'edit_item'          => __( 'Edit Timeline',       'timeline' ),
+			'new_item'           => __( 'New Timeline',        'timeline' ),
+			'search_items'       => __( 'Search Timelines',    'timeline' )
 		);
 
 		register_post_type( 'timeline', array(
