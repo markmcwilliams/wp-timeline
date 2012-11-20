@@ -23,6 +23,42 @@ class Timeline {
 
 		/* Register initial stuffs! */
 
+		add_action( 'init', 'register_timeline_post_type');
+
+	}
+
+	public function register_timeline_post_type() {
+
+		/* Probably lacking some code? */
+
+		$labels = array(
+			'name'               => __( 'Timeline',                 'timeline' ),
+			'menu_name'          => __( 'Timeline',                 'timeline' ),
+			'singular_name'      => __( 'Timeline',                 'timeline' ),
+			'all_items'          => __( 'All Timelines',            'timeline' ),
+			'add_new'            => __( 'New Timeline',             'timeline' ),
+			'add_new_item'       => __( 'Create New Timeline',      'timeline' ),
+			'edit'               => __( 'Edit',                     'timeline' ),
+			'edit_item'          => __( 'Edit Timeline',            'timeline' ),
+			'new_item'           => __( 'New Timeline',             'timeline' ),
+			'search_items'       => __( 'Search Timelines',         'timeline' )
+		);
+
+		register_post_type( 'timeline', array(
+			'labels'              => $labels,
+			'rewrite'             => false,
+			'supports'            => array( 'title', 'editor' ),
+			'menu_position'       => 20,
+			'has_archive'         => false, /* For present moment and time! */
+			'exclude_from_search' => true,
+			'show_in_nav_menus'   => false,
+			'show_in_menu'        => true,
+			'public'              => true,
+			'show_ui'             => true,
+			'can_export'          => true,
+			'query_var'           => false,
+		) );
+
 	}
 
 }
