@@ -1,18 +1,14 @@
 <?php
-
-/**
- * Let's start with something plain and fresh, so I can learn WHY you do what! :)
- */
-
 /**
  * Plugin Name: Timeline
- * Plugin URI:  http://mark.mcwilliams.me/wordpress/timeline-plugin/
- * Description: Record and display events from the past, present, and future!
- * Author:      Mark McWilliams
- * Author URI:  http://mark.mcwilliams.me/
- * Version:     0.1.0
- * Text Domain: timeline
- * Domain Path: /languages/
+ * Plugin URI: http://mark.mcwilliams.me/wordpress/timeline-plugin/
+ * Descritpion: Simple way to record and display events from the past, present, and future!
+ * Author: Mark McWilliams
+ * Author URI: http://mark.mcwilliams.me/
+ * Version: 0.1-alpha
+ *
+ * Something pretty plain and simple ATM!
+ * Learning WHY you do what, or attempting!
  */
 
 class Timeline {
@@ -22,8 +18,9 @@ class Timeline {
 	public function __construct() {
 
 		/* Register initial stuffs! */
+		/* Apparently you need to do the array() in there? */
 
-		add_action( 'init', 'register_timeline_post_type' );
+		add_action( 'init', array( &$this, 'register_timeline_post_type' ) );
 
 	}
 
