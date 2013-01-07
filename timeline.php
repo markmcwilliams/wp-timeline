@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.1.4
+ * Version: 0.1.5
  * Text Domain: timeline
  */
 
@@ -23,10 +23,7 @@ class mcwTimeline {
 
 		add_action( 'pre_get_posts', array( $this, 'timeline_default_order' ) );
 
-		/**
-		 * Something appears broke with this currently, but I could be attempting to do it wrong?
-		 * add_filter( 'template_include', array( $this, 'include_timeline_template' ) );
-		 */
+		add_filter( 'template_include', array( $this, 'include_timeline_template' ) );
 
 	}
 
@@ -102,11 +99,11 @@ class mcwTimeline {
 
 		if ( is_post_type_archive( 'timeline' ) )
 
-			$template = 'template/archive-timeline.php';
+			$template = dirname( __FILE__ ) . '/template/archive-timeline.php';
 
 		if ( is_singular( 'timeline' ) )
 
-			$template = 'template/single-timeline.php';
+			$template = dirname( __FILE__ ) . '/template/single-timeline.php';
 
 		return $template;
 
