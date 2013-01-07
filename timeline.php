@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.1-alpha-003
+ * Version: 0.1.1
  * Text Domain: timeline
  */
 
