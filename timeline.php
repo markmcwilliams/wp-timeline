@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.1-alpha
+ * Version: 0.1-alpha-003
  * Text Domain: timeline
  */
 
@@ -16,12 +16,12 @@ class mcwTimeline {
 	 */
 	public function __construct() {
 
-		register_activation_hook( __FILE__, array( $this, 'activate' ) );
-
 		add_action( 'init', array( $this, 'init' ) );
 
 		remove_action( 'future_timeline', array( $this, '_future_post_hook' ) );
 		add_action( 'wp_insert_post_data', array( $this, 'publish_future_timeline' ) );
+
+		add_action( 'pre_get_posts', array( $this, 'timeline_default_order' ) );
 
 	}
 
@@ -43,10 +43,10 @@ class mcwTimeline {
 				'edit_item' => __( 'Edit Timeline', 'timeline' ),
 				'new_item' => __( 'New Timeline', 'timeline' ),
 				'search_items' => __( 'Search Timelines', 'timeline' ) ),
-			'rewrite' => apply_filters( 'mcw_timeline_rewrite', false ),
+			'rewrite' => true,
 			'supports' => array( 'title', 'editor' ),
 			'menu_position' => 20,
-			'has_archive' => apply_filters( 'mcw_timeline_archive', true ),
+			'has_archive' => true,
 			'exclude_from_search' => true,
 			'show_in_nav_menus' => false,
 			'show_in_menu' => true,
@@ -61,15 +61,6 @@ class mcwTimeline {
 	/**
 	 * Need to document what happens here!
 	 */
-	public function activate() {
-
-		flush_rewrite_rules();
-
-	}
-
-	/**
-	 * Need to document what happens here!
-	 */
 	public function publish_future_timeline( $data ) {
 
 		if ( $data['post_status'] == 'future' && $data['post_type'] == 'timeline' )
@@ -77,6 +68,25 @@ class mcwTimeline {
 			$data['post_status'] = 'publish';
 
 		return $data;
+
+	}
+
+	/**
+	 * Need to document what happens here!
+	 */
+	public function timeline_default_order( $query ) {
+
+		if( 'timeline' == $query->get( 'post_type' ) ) {
+
+			if( $query->get( 'orderby' ) == '' )
+
+				$query->set( 'orderby', 'date' );
+
+			if( $query->get( 'order' ) == '' )
+
+				$query->set( 'order', 'ASC' );
+
+		}
 
 	}
 
