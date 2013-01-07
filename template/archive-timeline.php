@@ -15,20 +15,20 @@ get_header(); ?>
 					<h1 class="page-title">Timeline</h1>
 				</header><!-- .page-header -->
 
-				<ul id="timeline">
+				<ol id="timeline">
 
 				<?php while ( have_posts() ) : the_post(); ?>
 
-					<li id="timeline-<?php the_ID(); ?>" <?php post_class(); ?>>
-						<span class="entry-title"><?php the_title(); ?></span>
-						<span class="entry-meta-date">When: <?php the_time( 'F j, Y' ); ?></span>
-						<span class="entry-meta-time">Time: <?php the_time( 'g:i A' ); ?></span>
-						<span class="entry-content"><?php the_content(); ?></span>
+					<li id="timeline-<?php the_ID(); ?>">
+						<h3 class="entry-title"><?php the_title(); ?></h3>
+						<span class="entry-meta-date">When: <time datetime="0000-00-00"><?php the_time( 'F j, Y' ); ?></time></span>
+						<span class="entry-meta-time">Time: <time datetime="0000-00-00"><?php the_time( 'g:i A' ); ?></time></span>
+						<?php the_content(); ?>
 					</li><!-- #timeline-<?php the_ID(); ?> -->
 
 				<?php endwhile; ?>
 
-				</ul><!-- #timeline -->
+				</ol><!-- #timeline -->
 
 			<?php else : ?>
 
@@ -39,5 +39,5 @@ get_header(); ?>
 			</div><!-- #content .site-content -->
 		</section><!-- #primary .content-area -->
 
-<?php get_sidebar(); ?>
+<?php /** get_sidebar(); */ ?>
 <?php get_footer(); ?>

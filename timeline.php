@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.1.5
+ * Version: 0.1.6
  * Text Domain: timeline
  */
 
@@ -24,6 +24,8 @@ class mcwTimeline {
 		add_action( 'pre_get_posts', array( $this, 'timeline_default_order' ) );
 
 		add_filter( 'template_include', array( $this, 'include_timeline_template' ) );
+
+		add_action( 'wp_enqueue_scripts', array( $this, 'include_timeline_template_css' ) );
 
 	}
 
@@ -106,6 +108,12 @@ class mcwTimeline {
 			$template = dirname( __FILE__ ) . '/template/single-timeline.php';
 
 		return $template;
+
+	}
+
+	public function include_timeline_template_css() {
+
+		wp_enqueue_style( 'timeline', plugins_url( '/template/css/timeline.css', __FILE__ ) );
 
 	}
 
