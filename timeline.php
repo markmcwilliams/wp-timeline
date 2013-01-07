@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.1.2
+ * Version: 0.1.3
  * Text Domain: timeline
  */
 
@@ -76,7 +76,7 @@ class mcwTimeline {
 	 */
 	public function timeline_default_order( $query ) {
 
-		if ( $query->get( 'post_type' ) == 'timeline' ) ) {
+		if ( $query->get( 'post_type' ) == 'timeline' ) {
 
 			if ( $query->get( 'orderby' ) == '' )
 
