@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.1.9
+ * Version: 0.1.10
  * Text Domain: timeline
  */
 
@@ -147,7 +147,7 @@ class mcwTimeline {
 			 */
 		), $atts ) );
 
-		$start .= '<ol id="timeline">';
+		$start = '<ol id="timeline">';
 
 		$timeline = new WP_Query( array(
 			'post_type' => 'timeline',
@@ -158,7 +158,9 @@ class mcwTimeline {
 			 */
 		) );
 
-		while ( $timeline->have_posts() ) : $timeline->the_post(); ob_start(); ?>
+		ob_start();
+
+		while ( $timeline->have_posts() ) : $timeline->the_post(); ?>
 
 			<li id="timeline-<?php the_ID(); ?>">
 				<h3 class="entry-title"><?php the_title(); ?></h3>
