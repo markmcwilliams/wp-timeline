@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.1.8
+ * Version: 0.1.9
  * Text Domain: timeline
  */
 
@@ -26,6 +26,8 @@ class mcwTimeline {
 		add_filter( 'template_include', array( $this, 'include_timeline_template' ) );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'include_timeline_template_css' ) );
+
+		add_shortcode( 'timeline', array( $this, 'timeline_shortcode_setup' ) );
 
 	}
 
@@ -129,6 +131,47 @@ class mcwTimeline {
 	public function include_timeline_template_css() {
 
 		wp_enqueue_style( 'timeline', plugins_url( '/template/css/timeline.css', __FILE__ ) );
+
+	}
+
+	/**
+	 * Need to document what happens here!
+	 */
+	public function timeline_shortcode_setup( $atts ) {
+
+		extract( shortcode_atts( array(
+			'foo' => 'bar',
+			'bar' => 'foo',
+			/**
+			 * Figure out proper attributes!
+			 */
+		), $atts ) );
+
+		$start .= '<ol id="timeline">';
+
+		$timeline = new WP_Query( array(
+			'post_type' => 'timeline',
+			'order' => 'ASC',
+			'orderby' => 'date',
+			/**
+			 * Still more to add. These will be the [timeline] attributes I think?
+			 */
+		) );
+
+		while ( $timeline->have_posts() ) : $timeline->the_post(); ob_start(); ?>
+
+			<li id="timeline-<?php the_ID(); ?>">
+				<h3 class="entry-title"><?php the_title(); ?></h3>
+				<span class="entry-meta-date">When: <time datetime="0000-00-00"><?php the_time( 'F j, Y' ); ?></time></span>
+				<span class="entry-meta-time">Time: <time datetime="0000-00-00"><?php the_time( 'g:i A' ); ?></time></span>
+				<?php the_content(); ?>
+			</li><!-- #timeline-<?php the_ID(); ?> -->
+
+		<?php endwhile; wp_reset_postdata();
+
+		$finish .= '</ol><!-- #timeline -->';
+
+		return $start . ob_get_clean() . $finish;
 
 	}
 
