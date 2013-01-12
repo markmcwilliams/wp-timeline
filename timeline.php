@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.1.10
+ * Version: 0.2.1
  * Text Domain: timeline
  *
  * Copyright 2013 - Mark McWilliams (mark@mcwilliams.me)
@@ -54,6 +54,7 @@ class mcwTimeline {
 	 * Initiate the i18n files (early).
 	 *
 	 * @since 1.0.0
+	 *
 	 * @uses load_plugin_textdomain()
 	 */
 	public function timeline_i18n() {
@@ -66,9 +67,10 @@ class mcwTimeline {
 	 * Registers the Timeline Custom Post Type.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @uses register_post_type()
-	 * @uses apply_filters() Calls 'timeline_rewrite' on 'rewrite' argument.
-	 * @uses apply_filters() Calls 'timeline_archive' on 'has_archive' argument.
+	 * @uses apply_filters() Calls 'timeline_cpt_rewrite' on 'rewrite' argument.
+	 * @uses apply_filters() Calls 'timeline_cpt_archive' on 'has_archive' argument.
 	 */
 	public function timeline_cpt_init() {
 
@@ -83,10 +85,10 @@ class mcwTimeline {
 				'edit_item' => __( 'Edit Timeline', 'timeline' ),
 				'new_item' => __( 'New Timeline', 'timeline' ),
 				'search_items' => __( 'Search Timelines', 'timeline' ) ),
-			'rewrite' => apply_filters( 'timeline_rewrite', true ),
+			'rewrite' => apply_filters( 'timeline_cpt_rewrite', true ),
 			'supports' => array( 'title', 'editor' ),
 			'menu_position' => 20,
-			'has_archive' => apply_filters( 'timeline_archive', true ),
+			'has_archive' => apply_filters( 'timeline_cpt_archive', true ),
 			'exclude_from_search' => true,
 			'show_in_nav_menus' => false,
 			'show_in_menu' => true,
@@ -160,7 +162,13 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Need to document what happens here!
+	 * Includes the custom timeline.css file.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @uses wp_enqueue_style()
+	 *
+	 * TODO: Check that you can use your own style(s) if wanted?
 	 */
 	public function include_timeline_template_css() {
 
