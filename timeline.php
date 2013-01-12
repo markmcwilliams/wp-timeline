@@ -7,16 +7,35 @@
  * Author URI: http://mark.mcwilliams.me/
  * Version: 0.1.10
  * Text Domain: timeline
+ *
+ * Copyright 2013 - Mark McWilliams (mark@mcwilliams.me)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 class mcwTimeline {
 
 	/**
-	 * Need to document what happens here!
+	 * Adds hooks and initiates the class.
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'timeline_i18n' ), 5 );
+		add_action( 'init', array( $this, 'timeline_cpt_init' ) );
 
 		remove_action( 'future_timeline', array( $this, '_future_post_hook' ) );
 		add_action( 'wp_insert_post_data', array( $this, 'publish_future_timeline' ) );
@@ -32,11 +51,26 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Need to document what happens here!
+	 * Initiate the i18n files (early).
+	 *
+	 * @since 1.0.0
+	 * @uses load_plugin_textdomain()
 	 */
-	public function init() {
+	public function timeline_i18n() {
 
 		load_plugin_textdomain( 'timeline', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
+	}
+
+	/**
+	 * Registers the Timeline Custom Post Type.
+	 *
+	 * @since 1.0.0
+	 * @uses register_post_type()
+	 * @uses apply_filters() Calls 'timeline_rewrite' on 'rewrite' argument.
+	 * @uses apply_filters() Calls 'timeline_archive' on 'has_archive' argument.
+	 */
+	public function timeline_cpt_init() {
 
 		register_post_type( 'timeline', array(
 			'labels' => array(
@@ -49,10 +83,10 @@ class mcwTimeline {
 				'edit_item' => __( 'Edit Timeline', 'timeline' ),
 				'new_item' => __( 'New Timeline', 'timeline' ),
 				'search_items' => __( 'Search Timelines', 'timeline' ) ),
-			'rewrite' => true,
+			'rewrite' => apply_filters( 'timeline_rewrite', true ),
 			'supports' => array( 'title', 'editor' ),
 			'menu_position' => 20,
-			'has_archive' => true,
+			'has_archive' => apply_filters( 'timeline_archive', true ),
 			'exclude_from_search' => true,
 			'show_in_nav_menus' => false,
 			'show_in_menu' => true,
