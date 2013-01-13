@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Timeline
  * Plugin URI: http://mark.mcwilliams.me/wordpress/plugin/timeline/
- * Descritpion: Simple way to record and display events from the past, present, and future!
+ * Description: Simple way to record and display events from the past, the present, and the future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
  * Version: 0.2.2
