@@ -5,7 +5,7 @@
  * Descritpion: Simple way to record and display events from the past, present, and future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.2.1
+ * Version: 0.2.2
  * Text Domain: timeline
  *
  * Copyright 2013 - Mark McWilliams (mark@mcwilliams.me)
@@ -25,6 +25,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/**
+ * Main mcwTimeline Class
+ */
 class mcwTimeline {
 
 	/**
@@ -70,33 +73,39 @@ class mcwTimeline {
 	 *
 	 * @uses register_post_type()
 	 * @uses apply_filters() Calls 'timeline_cpt_rewrite' on 'rewrite' argument.
+	 * @uses apply_filters() Calls 'timeline_cpt_supports' on 'supports' argument.
 	 * @uses apply_filters() Calls 'timeline_cpt_archive' on 'has_archive' argument.
 	 */
 	public function timeline_cpt_init() {
 
-		register_post_type( 'timeline', array(
-			'labels' => array(
-				'name' => __( 'Timeline', 'timeline' ),
-				'menu_name' => __( 'Timeline', 'timeline' ),
-				'all_items' => __( 'All Timelines', 'timeline' ),
-				'add_new' => __( 'New Timeline', 'timeline' ),
-				'add_new_item' => __( 'Create New Timeline', 'timeline' ),
-				'edit' => __( 'Edit', 'timeline' ),
-				'edit_item' => __( 'Edit Timeline', 'timeline' ),
-				'new_item' => __( 'New Timeline', 'timeline' ),
-				'search_items' => __( 'Search Timelines', 'timeline' ) ),
-			'rewrite' => apply_filters( 'timeline_cpt_rewrite', true ),
-			'supports' => array( 'title', 'editor' ),
-			'menu_position' => 20,
-			'has_archive' => apply_filters( 'timeline_cpt_archive', true ),
+		$labels = array(
+			'name'         => __( 'Timeline', 'timeline' ),
+			'menu_name'    => __( 'Timeline', 'timeline' ),
+			'all_items'    => __( 'All Timelines', 'timeline' ),
+			'add_new'      => __( 'New Timeline', 'timeline' ),
+			'add_new_item' => __( 'Create New Timeline', 'timeline' ),
+			'edit'         => __( 'Edit', 'timeline' ),
+			'edit_item'    => __( 'Edit Timeline', 'timeline' ),
+			'new_item'     => __( 'New Timeline', 'timeline' ),
+			'search_items' => __( 'Search Timelines', 'timeline' )
+		);
+
+		$args = array(
+			'labels'              => $labels,
+			'rewrite'             => apply_filters( 'timeline_cpt_rewrite', true ),
+			'supports'            => apply_filters( 'timeline_cpt_supports', array( 'title', 'editor' ) ),
+			'menu_position'       => 20,
+			'has_archive'         => apply_filters( 'timeline_cpt_archive', true ),
 			'exclude_from_search' => true,
-			'show_in_nav_menus' => false,
-			'show_in_menu' => true,
-			'public' => true,
-			'show_ui' => true,
-			'can_export' => true,
-			'query_var' => false
-		) );
+			'show_in_nav_menus'   => false,
+			'show_in_menu'        => true,
+			'public'              => true,
+			'show_ui'             => true,
+			'can_export'          => true,
+			'query_var'           => false
+		);
+
+		register_post_type( 'timeline', $args );
 
 	}
 
