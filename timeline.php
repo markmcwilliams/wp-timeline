@@ -5,7 +5,7 @@
  * Description: Simple way to record and display events from the past, the present, and the future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.2.2
+ * Version: Beta 0.3.0
  * Text Domain: timeline
  *
  * Copyright 2013 - Mark McWilliams (mark@mcwilliams.me)
@@ -37,24 +37,54 @@ class mcwTimeline {
 	 */
 	public function __construct() {
 
-		add_action( 'init', array( $this, 'timeline_i18n' ), 5 );
+		/* Load the plugins Text Domain */
+		add_action( 'init', array( $this, 'timeline_i18n' ) );
+
+		/* Register the 'timeline' Custom Post Type */
 		add_action( 'init', array( $this, 'timeline_cpt_init' ) );
 
+		/* Registers activation and deactivation hooks. */
+		register_activation_hook( __FILE__, array( $this, 'activate' ) );
+		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+
+		/* Register the site style. */
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_timeline_css' ) );
+
+		/* Removes the '_future_post_hook' in favour of a custom action. */
 		remove_action( 'future_timeline', array( $this, '_future_post_hook' ) );
 		add_action( 'wp_insert_post_data', array( $this, 'publish_future_timeline' ) );
 
+		/* Registers the alterations to default 'timeline' query. */
 		add_action( 'pre_get_posts', array( $this, 'timeline_default_order' ) );
 
+		/* Registers the location of included templates. */
 		add_filter( 'template_include', array( $this, 'include_timeline_template' ) );
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'include_timeline_template_css' ) );
-
+		/* Registers the [timeline] shortcode. */
 		add_shortcode( 'timeline', array( $this, 'timeline_shortcode_setup' ) );
 
 	}
 
 	/**
-	 * Initiate the i18n files (early).
+	 * Fired when the plugin gets activated.
+	 *
+	 * @since 1.0.0
+	 */
+	public function activate() {
+		/* Input functionality here. */
+	}
+
+	/**
+	 * Fired when the plugin gets deactivated.
+	 *
+	 * @since 1.0.0
+	 */
+	public function deactivate() {
+		/* Input functionality here. */
+	}
+
+	/**
+	 * Initiate the i18n files.
 	 *
 	 * @since 1.0.0
 	 *
@@ -67,7 +97,7 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Registers the Timeline Custom Post Type.
+	 * Registers the 'timeline' Custom Post Type.
 	 *
 	 * @since 1.0.0
 	 *
@@ -110,7 +140,30 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Need to document what happens here!
+	 * Registers and enqueues the custom timeline.css style.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @uses wp_enqueue_style()
+	 *
+	 * TODO: Check that you can use your own style(s) if wanted?
+	 */
+	public function register_timeline_css() {
+
+		wp_enqueue_style( 'timeline', plugins_url( '/template/css/timeline.css', __FILE__ ) );
+
+	}
+
+	/**
+	 * Sets all of the posts added to the 'timeline' CPT with
+	 * a future timestamp to 'publish' when you publish them.
+	 *
+	 * Thanks to Andrew Nacin for the snippet of code.
+	 *
+	 * @link http://wordpress.org/support/topic/publish-scheduled-posts-in-35#post-3561466
+	 * @link http://plugins.trac.wordpress.org/changeset/639040
+	 *
+	 * @since 1.0.0
 	 */
 	public function publish_future_timeline( $data ) {
 
@@ -123,7 +176,11 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Need to document what happens here!
+	 * Changes the default order in which 'timeline' posts are
+	 * displayed. We want to show the closest post/event first,
+	 * based on the date, and in an ascending order.
+	 *
+	 * @since 1.0.0
 	 */
 	public function timeline_default_order( $query ) {
 
@@ -142,7 +199,14 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Need to document what happens here!
+	 * If you're using the built-in archive for 'timeline' then
+	 * we need to include our specific templates. We first do a
+	 * check in the Parent and Child theme directories before
+	 * including the relevant template supplied.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @uses locate_template()
 	 */
 	public function include_timeline_template( $template ) {
 
@@ -156,7 +220,7 @@ class mcwTimeline {
 
 		else:
 
-			return $template; // return early if it's not a template we care about
+			return $template; // Return early if it's not a template we care about.
 
 		endif;
 
@@ -171,22 +235,9 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Includes the custom timeline.css file.
+	 * Registers the main functions of the [timeline] shortcode.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @uses wp_enqueue_style()
-	 *
-	 * TODO: Check that you can use your own style(s) if wanted?
-	 */
-	public function include_timeline_template_css() {
-
-		wp_enqueue_style( 'timeline', plugins_url( '/template/css/timeline.css', __FILE__ ) );
-
-	}
-
-	/**
-	 * Need to document what happens here!
 	 */
 	public function timeline_shortcode_setup( $atts ) {
 
@@ -194,7 +245,8 @@ class mcwTimeline {
 			'foo' => 'bar',
 			'bar' => 'foo',
 			/**
-			 * Figure out proper attributes!
+			 * Still to figure our proper attributes.
+			 * Any suggestions are more than welcome.
 			 */
 		), $atts ) );
 
@@ -205,10 +257,12 @@ class mcwTimeline {
 			'order' => 'ASC',
 			'orderby' => 'date',
 			/**
-			 * Still more to add. These will be the [timeline] attributes I think?
+			 * Still to get these added. Will more than likely
+			 * just be the [timeline] attributes I would think?
 			 */
 		) );
 
+		/* TODO: Apparently ob isn't recommended. So do it a clean(er) way! */
 		ob_start();
 
 		while ( $timeline->have_posts() ) : $timeline->the_post(); ?>
