@@ -156,7 +156,7 @@ class mcwTimeline {
 	 */
 	public function register_timeline_css() {
 
-		wp_enqueue_style( 'timeline', plugins_url( '/template/css/timeline.css', __FILE__ ) );
+		wp_enqueue_style( 'timeline', plugins_url( '/css/timeline.css', __FILE__ ) );
 
 	}
 
