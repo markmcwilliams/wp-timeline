@@ -24,7 +24,7 @@ None as such, but will add them when/if they get asked.
 
 = What filters do you have available for developers? =
 
-See the <a href="http://mark.mcwilliams.me/wordpress/timeline/#filters">filters section</a> of the release post for more details.
+See the [filters available](http://mark.mcwilliams.me/wordpress/plugin/timeline/) on the release post for more details.
 
 == Screenshots ==
 
