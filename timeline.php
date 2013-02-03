@@ -254,18 +254,14 @@ class mcwTimeline {
 	public function timeline_shortcode_setup( $atts ) {
 
 		extract( shortcode_atts( array(
-			'foo' => 'bar',
-			'bar' => 'foo',
-			/**
-			 * Still to figure our proper attributes.
-			 * Any suggestions are more than welcome.
-			 */
+			'type' => 'timeline',
+			/* First of many! */
 		), $atts ) );
 
 		$start = '<ol id="timeline">';
 
 		$timeline = new WP_Query( array(
-			'post_type' => 'timeline',
+			'post_type' => $type,
 			'order' => 'ASC',
 			'orderby' => 'date',
 			'posts_per_page' => -1
