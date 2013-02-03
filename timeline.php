@@ -202,6 +202,12 @@ class mcwTimeline {
 
 		}
 
+		if ( is_post_type_archive( 'timeline' ) ) {
+
+			$query->set( 'posts_per_page', -1 );
+
+		}
+
 	}
 
 	/**
@@ -262,10 +268,7 @@ class mcwTimeline {
 			'post_type' => 'timeline',
 			'order' => 'ASC',
 			'orderby' => 'date',
-			/**
-			 * Still to get these added. Will more than likely
-			 * just be the [timeline] attributes I would think?
-			 */
+			'posts_per_page' => -1
 		) );
 
 		/* TODO: Apparently ob isn't recommended. So do it a clean(er) way! */
