@@ -5,7 +5,7 @@
  * Description: Simple way to record and display events from the past, the present, and the future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: Beta 0.3.0
+ * Version: 0.4-alpha
  * Text Domain: timeline
  *
  * Copyright 2013 - Mark McWilliams (mark@mcwilliams.me)
@@ -255,35 +255,41 @@ class mcwTimeline {
 
 		extract( shortcode_atts( array(
 			'type' => 'timeline',
+			'show' => -1,
 			/* First of many! */
 		), $atts ) );
 
-		$start = '<ol id="timeline">';
+		$output = '<div id="timeline">';
 
-		$timeline = new WP_Query( array(
-			'post_type' => $type,
-			'order' => 'ASC',
-			'orderby' => 'date',
-			'posts_per_page' => -1
-		) );
+			$output .= '<ol>';
 
-		/* TODO: Apparently ob isn't recommended. So do it a clean(er) way! */
-		ob_start();
+			$timeline = new WP_Query( array(
+				'post_type' => $type,
+				'posts_per_page' => $show,
+				'order' => 'ASC',
+				'orderby' => 'date',
+			) );
 
-		while ( $timeline->have_posts() ) : $timeline->the_post(); ?>
+			while ( $timeline->have_posts() ) : $timeline->the_post();
 
-			<li id="timeline-<?php the_ID(); ?>">
-				<h3 class="entry-title"><?php the_title(); ?></h3>
-				<span class="entry-meta-date">When: <time datetime="0000-00-00"><?php the_time( 'F j, Y' ); ?></time></span>
-				<span class="entry-meta-time">Time: <time datetime="0000-00-00"><?php the_time( 'g:i A' ); ?></time></span>
-				<?php the_content(); ?>
-			</li><!-- #timeline-<?php the_ID(); ?> -->
+				$output .= '<li id="timeline-' . get_the_ID() . '">';
 
-		<?php endwhile; wp_reset_postdata();
+					$output .= '<h3 class="timeline-entry-title">' . get_the_title() . '</h3>';
+					$output .= '<p class="timeline-entry-content">' . get_the_content() . '</p>';
+					$output .= '<p class="timeline-entry-date">When: <time datetime="0000-00-00">' . get_the_date( 'F j, Y' ) . '</time></p>';
+					$output .= '<p class="timeline-entry-time">Time: <time datetime="0000-00-00">' . get_the_time( 'g:i A' ) . '</time></p>';
 
-		$finish .= '</ol><!-- #timeline -->';
+				$output .= '</li>';
 
-		return $start . ob_get_clean() . $finish;
+			endwhile;
+
+			wp_reset_postdata();
+
+			$output .= '</ol>';
+
+		$output .= '</div>';
+
+		return $output;
 
 	}
 
