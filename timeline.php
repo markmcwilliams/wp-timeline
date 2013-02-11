@@ -259,16 +259,16 @@ class mcwTimeline {
 			/* First of many! */
 		), $atts ) );
 
+		$timeline = new WP_Query( array(
+			'post_type' => $type,
+			'posts_per_page' => $show,
+			'order' => 'ASC',
+			'orderby' => 'date',
+		) );
+
 		$output = '<div id="timeline">';
 
 			$output .= '<ol>';
-
-			$timeline = new WP_Query( array(
-				'post_type' => $type,
-				'posts_per_page' => $show,
-				'order' => 'ASC',
-				'orderby' => 'date',
-			) );
 
 			while ( $timeline->have_posts() ) : $timeline->the_post();
 
