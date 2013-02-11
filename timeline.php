@@ -272,12 +272,11 @@ class mcwTimeline {
 
 			while ( $timeline->have_posts() ) : $timeline->the_post();
 
-				$output .= '<li id="timeline-' . get_the_ID() . '">';
+				$output .= '<li id="timeline-' . esc_attr( get_the_ID() ) . '">';
 
-					$output .= '<h3 class="timeline-entry-title">' . get_the_title() . '</h3>';
-					$output .= '<p class="timeline-entry-content">' . get_the_content() . '</p>';
-					$output .= '<p class="timeline-entry-date">When: <time datetime="0000-00-00">' . get_the_date( 'F j, Y' ) . '</time></p>';
-					$output .= '<p class="timeline-entry-time">Time: <time datetime="0000-00-00">' . get_the_time( 'g:i A' ) . '</time></p>';
+					$output .= '<h3 class="timeline-entry-title">' . esc_html( get_the_title() ) . '</h3>';
+					$output .= '<p class="timeline-entry-content">' . esc_html( get_the_content() ) . '</p>';
+					$output .= '<p class="timeline-entry-meta">' . sprintf( '<time datetime="%1$s">%2$s &mdash; %3$s</time>', esc_attr( get_the_date( 'c' ) ), esc_html( get_the_date( 'F j, Y' ) ), esc_html( get_the_time( 'g:i A' ) ) ) . '</p>';
 
 				$output .= '</li>';
 
