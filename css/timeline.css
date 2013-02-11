@@ -1,4 +1,4 @@
-#timeline{
+#timeline ol {
     background:url(http://dummyimage.com/1x1/f43059/f43059.gif) top center repeat-y;
     width:820px;
     padding:50px 0;
@@ -8,8 +8,8 @@
     position:relative;
 }
 
-#timeline:before, /* The dot */
-#timeline:after{ /* The arrow */
+#timeline ol:before, /* The dot */
+#timeline ol:after { /* The arrow */
     content:" ";
     width:10px;
     height:10px;
@@ -24,7 +24,8 @@
         -moz-border-radius:20px;
             border-radius:20px;
 }
-#timeline:after{
+
+#timeline ol:after {
     margin-left:-7px;
     background:none;
     border:7px solid transparent;
@@ -39,8 +40,8 @@
             border-radius:0;
 }
 
-#timeline li:before,
-#timeline li:after{
+#timeline ol li:before,
+#timeline ol li:after {
 	content:" ";
 	width:70px;
 	height:1px;
@@ -52,23 +53,23 @@
 	background:-webkit-gradient(linear,left top,right top,from(#d8d566),to(#f43059));
 }
 
-#timeline li:nth-of-type(even){
+#timeline ol li:nth-of-type(even) {
     float:right;
     text-align:left;
 }
-#timeline li:nth-of-type(even):after{ /* Move branches */
+#timeline ol li:nth-of-type(even):after { /* Move branches */
     background:-moz-linear-gradient(0,#f43059,#d8d566);
     background:-webkit-gradient(linear,left top,right top,from(#f43059),to(#d8d566));
     left:auto;
     right:100%;
 }
 
-#timeline li:nth-of-type(odd),
-#timeline li:nth-of-type(even){
+#timeline ol li:nth-of-type(odd),
+#timeline ol li:nth-of-type(even) {
 	margin:-10px 0 0 0;
 }
 
-#timeline li{
+#timeline ol li {
     position:relative;
     clear:both;
     float:left;
