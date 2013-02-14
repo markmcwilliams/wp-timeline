@@ -5,7 +5,7 @@
  * Description: Simple way to record and display events from the past, the present, and the future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.4-alpha
+ * Version: 0.5-alpha
  * Text Domain: timeline
  *
  * Copyright 2013 - Mark McWilliams (mark@mcwilliams.me)
