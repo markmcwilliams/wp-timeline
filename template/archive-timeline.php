@@ -12,23 +12,26 @@ get_header(); ?>
 			<?php if ( have_posts() ) : ?>
 
 				<header class="page-header">
-					<h1 class="page-title">Timeline</h1>
+					<h1 class="page-title"><?php apply_filters( 'timeline_archive_page_title', 'Timeline' ); ?></h1>
 				</header><!-- .page-header -->
 
-				<ol id="timeline">
+				<div id="timeline">
 
-				<?php while ( have_posts() ) : the_post(); ?>
+					<ol id="timeline">
 
-					<li id="timeline-<?php the_ID(); ?>">
-						<h3 class="entry-title"><?php the_title(); ?></h3>
-						<span class="entry-meta-date">When: <time datetime="0000-00-00"><?php the_time( 'F j, Y' ); ?></time></span>
-						<span class="entry-meta-time">Time: <time datetime="0000-00-00"><?php the_time( 'g:i A' ); ?></time></span>
-						<?php the_content(); ?>
-					</li><!-- #timeline-<?php the_ID(); ?> -->
+					<?php while ( have_posts() ) : the_post(); ?>
 
-				<?php endwhile; ?>
+						<li id="timeline-<?php the_ID(); ?>">
+							<h3 class="timeline-entry-title"><?php the_title(); ?></h3>
+							<p class="timeline-entry-content"><?php the_content(); // Need to check how the get_* option works! ?></p>
+							<p class="timeline-entry-meta"><time datetime="<?php the_date( 'c' ); ?>"><?php the_date( 'F j, Y' ); ?> &mdash; <?php the_time( 'g:i A' ); ?></time></p>
+						</li>
 
-				</ol><!-- #timeline -->
+					<?php endwhile; ?>
+
+					</ol><!-- #timeline -->
+
+				</div>
 
 			<?php else : ?>
 
