@@ -4,55 +4,52 @@
 
 #timeline ol {
     background: url('images/ordered-list-timeline-bg.png') top center repeat-y;
-    padding: 0;
-    margin: 0;
+    padding: 20px 0;
+    margin: 20px 0;
     list-style: none;
     position: relative;
 }
 
 #timeline ol li {
-    width: 50%;
-    display: block;
-    border: 1px solid #ededed;
     position: relative;
-    clear: both;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-#timeline ol li:nth-of-type(odd) {
-    float: left;
-    margin: -10px 0;
-    margin-right: 30px;
-    padding: 10px;
-    position: relative;
+    width: 40%;
+    margin: 1em 0;
+    padding: 0.5em 2%;
+    border: 2px solid #ededed;
+    background-color: #fff;
 }
 
 #timeline ol li:nth-of-type(even) {
     float: right;
-    margin: -10px 0;
-    margin-left: 30px;
-    padding: 10px;
-    position: relative;
 }
 
-#timeline ol li:nth-of-type(odd):after {
+#timeline ol li:before {
     content: "";
-    width: 30px;
-    height: 1px;
-    background: #ededed;
-    top: 50%;
-    left: 100%;
     position: absolute;
+    top: 15px;
+    right: -13%;
+    width: 13%;
+    height: 2px;
+    background-color: #ededed;
+}
+
+#timeline ol li:after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    right: -15.6%;
+    width: 15px;
+    height: 15px;
+    background-color: #fff;
+    border: 2px solid #ededed;
+    border-radius: 15px;
+    z-index: 10;
 }
 
 #timeline ol li:nth-of-type(even):before {
-    content: "";
-    width: 30px;
-    height: 1px;
-    background: #ededed;
-    top: 50%;
-    right: 100%;
-    position: absolute;
+    left: -13%;
+}
+
+#timeline ol li:nth-of-type(even):after {
+    left: -15%;
 }
