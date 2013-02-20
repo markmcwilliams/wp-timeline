@@ -5,7 +5,7 @@
  * Description: Simple way to record and display events from the past, the present, and the future!
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.5-alpha
+ * Version: 0.6-alpha
  * Text Domain: timeline
  *
  * Copyright 2013 - Mark McWilliams (mark@mcwilliams.me)
@@ -266,7 +266,7 @@ class mcwTimeline {
 			'orderby' => 'date',
 		) );
 
-		$output = '<div id="timeline">';
+		$output = '<div class="timeline">';
 
 			$output .= '<ol>';
 
