@@ -12,12 +12,12 @@ get_header(); ?>
 			<?php if ( have_posts() ) : ?>
 
 				<header class="page-header">
-					<h1 class="page-title"><?php apply_filters( 'timeline_archive_page_title', 'Timeline' ); ?></h1>
+					<h1 class="page-title">Timeline</h1>
 				</header><!-- .page-header -->
 
-				<div id="timeline">
+				<div class="timeline">
 
-					<ol id="timeline">
+					<ol>
 
 					<?php while ( have_posts() ) : the_post(); ?>
 
@@ -29,9 +29,9 @@ get_header(); ?>
 
 					<?php endwhile; ?>
 
-					</ol><!-- #timeline -->
+					</ol>
 
-				</div>
+				</div><!-- .timeline -->
 
 			<?php else : ?>
 
