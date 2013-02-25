@@ -4,18 +4,18 @@
 
 .timeline ol {
     background: url('images/ordered-list-timeline-bg.png') top center repeat-y;
-    padding: 20px 0;
-    margin: 20px 0;
-    list-style: none;
+    padding: 50px 0 80px 0;
+    list-style-type: none;
     position: relative;
 }
 
 .timeline ol li {
+    display: block;
     position: relative;
     width: 40%;
-    margin: 1em 0;
-    padding: 0.5em 2%;
-    border: 2px solid #ededed;
+    margin: -30px 0 -60px 0;
+    padding: 10px;
+    border: 1px solid #ededed;
     background-color: #fff;
     clear: both;
 }
@@ -27,30 +27,13 @@
 .timeline ol li:before {
     content: "";
     position: absolute;
-    top: 15px;
-    right: -13%;
-    width: 13%;
-    height: 2px;
+    top: 25%;
+    right: -15%;
+    width: 15%;
+    height: 1px;
     background-color: #ededed;
 }
 
-.timeline ol li:after {
-    content: "";
-    position: absolute;
-    top: 6px;
-    right: -15.6%;
-    width: 15px;
-    height: 15px;
-    background-color: #fff;
-    border: 2px solid #ededed;
-    border-radius: 15px;
-    z-index: 10;
-}
-
-.#timeline ol li:nth-of-type(even):before {
-    left: -13%;
-}
-
-.timeline ol li:nth-of-type(even):after {
+.timeline ol li:nth-of-type(even):before {
     left: -15%;
 }
