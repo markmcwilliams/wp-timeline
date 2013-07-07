@@ -112,7 +112,7 @@ final class Timeline {
 
 		// Set The Single Instance If It Hasn't Been Set Already
 		if ( null == self::$instance ) {
-			self::$instance = new self;
+			self::$instance = new Timeline;
 		}
 
 		return self::$instance;
@@ -396,5 +396,7 @@ register_activation_hook( __FILE__, array( 'Timeline', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Timeline', 'deactivate' ) );
 
 Timeline::instance();
+
+endif; // The class_exists Check
 
 ?>
