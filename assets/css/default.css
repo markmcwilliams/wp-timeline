@@ -3,7 +3,7 @@
 }
 
 .timeline ol {
-    background: url('images/ordered-list-timeline-bg.png') top center repeat-y;
+    background: url('../images/ordered-list-background.png') top center repeat-y;
     padding: 50px 0 80px 0;
     list-style-type: none;
     position: relative;
