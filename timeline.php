@@ -1,131 +1,228 @@
 <?php
 /**
  * Plugin Name: Timeline
- * Plugin URI: http://mark.mcwilliams.me/wordpress/plugin/timeline/
- * Description: Simple way to record and display events from the past, the present, and the future!
+ * Plugin URI: http://mark.mcwilliams.me/wordpress/timeline/
+ * Description: Manage Timeline Events Through WordPress
  * Author: Mark McWilliams
  * Author URI: http://mark.mcwilliams.me/
- * Version: 0.6-alpha
+ * Version: 0.1.0
  * Text Domain: timeline
+ * Domain Path: languages
  *
- * Copyright 2013 - Mark McWilliams (mark@mcwilliams.me)
- *
- * This program is free software; you can redistribute it and/or modify
+ * Timeline is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Timeline is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Timeline. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package Timeline
+ * @author Mark McWilliams
+ * @version 0.1.0
  */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+if ( ! class_exists( 'Timeline' ) ) :
 
 /**
- * Main mcwTimeline Class
+ * Main Timeline Class
+ *
+ * @since 0.1.0
  */
-class mcwTimeline {
+final class Timeline {
 
 	/**
-	 * Adds hooks and initiates the class.
+	 * Plugin Version
 	 *
-	 * @since 1.0.0
+	 * @since 0.1.0
+	 * @var string
 	 */
-	public function __construct() {
+	protected $version = '0.1.0';
 
-		/* Load the plugins Text Domain */
-		add_action( 'init', array( $this, 'timeline_i18n' ) );
+	/**
+	 * Unique Identifier
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	protected $plugin_slug = 'timeline';
 
-		/* Register the 'timeline' Custom Post Type */
-		add_action( 'init', array( $this, 'timeline_cpt_init' ) );
+	/**
+	 * Single Instance Of Timeline
+	 *
+	 * @since 0.1.0
+	 * @var object
+	 */
+	protected static $instance = null;
 
-		/* Registers activation and deactivation hooks. */
-		register_activation_hook( __FILE__, array( $this, 'activate' ) );
-		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+	/**
+	 * Initiate The Plugin
+	 *
+	 * @since 0.1.0
+	 */
+	private function __construct() {
 
-		/* Register the site style. */
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_timeline_css' ) );
+		// Load Plugins Text Domain
+		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-		/* Removes the '_future_post_hook' in favour of a custom action. */
+		// Timeline Post Type
+		add_action( 'init', array( $this, 'setup_post_type' ) );
+
+		// Register If Theme Doesn't Support Timeline
+		if ( ! current_theme_supports( 'timeline' ) ) {
+
+			// Default Styles
+			add_action( 'wp_enqueue_scripts', array( $this, 'setup_default_styles' ) );
+
+			// Default Templates
+			add_action( 'template_include', array( $this, 'setup_default_templates' ) );
+
+		}
+
+		// Remove _future_post_hook In Favour Of A Custom Option
 		remove_action( 'future_timeline', array( $this, '_future_post_hook' ) );
-		add_action( 'wp_insert_post_data', array( $this, 'publish_future_timeline' ) );
+		add_action( 'wp_insert_post_data', array( $this, 'setup_future_entries' ) );
 
-		/* Registers the alterations to default 'timeline' query. */
-		add_action( 'pre_get_posts', array( $this, 'timeline_default_order' ) );
+		// Register Default Query Alterations
+		add_action( 'pre_get_posts', array( $this, 'setup_default_query' ) );
 
-		/* Registers the location of included templates. */
-		add_filter( 'template_include', array( $this, 'include_timeline_template' ) );
+		// Add Option Page To The Admin (Maybe Just Filter Everything?)
+		// add_action( 'admin_menu', array( $this, 'setup_admin_options' ) );
 
-		/* Registers the [timeline] shortcode. */
-		add_shortcode( 'timeline', array( $this, 'timeline_shortcode_setup' ) );
+		// Register [timeline] Shortcode
+		add_shortcode( 'timeline', array( $this, 'setup_shortcode_details' ) );
 
 	}
 
 	/**
-	 * Fired when the plugin gets activated.
+	 * Return An Instance Of Timeline
 	 *
-	 * @since 1.0.0
+	 * @since 0.1.0
+	 * @return object Single Instance Of Timeline
 	 */
-	public function activate() {
-		/* Input functionality here. */
+	public static function instance() {
+
+		// Set The Single Instance If It Hasn't Been Set Already
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+
 	}
 
 	/**
-	 * Fired when the plugin gets deactivated.
+	 * Fired On Plugin Activation
 	 *
-	 * @since 1.0.0
+	 * @since 0.1.0
+	 * @param boolean $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog.
 	 */
-	public function deactivate() {
-		/* Input functionality here. */
+	public static function activate( $network_wide ) {
+
+		//Flush Rewrite Rules
+		flush_rewrite_rules();
+
 	}
 
+
 	/**
-	 * Initiate the i18n files.
+	 * Fired On Plugin Deactivation
 	 *
-	 * @since 1.0.0
-	 *
-	 * @uses load_plugin_textdomain()
+	 * @since 0.1.0
+	 * @param boolean $network_wide True if WPMU superadmin uses "Network Deactivate" action, false if WPMU is disabled or plugin is deactivated on an individual blog.
 	 */
-	public function timeline_i18n() {
+	public static function deactivate( $network_wide ) {
 
-		load_plugin_textdomain( 'timeline', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		// Flush Rewrite Rules
+		flush_rewrite_rules();
 
 	}
 
 	/**
-	 * Registers the 'timeline' Custom Post Type.
+	 * Load the translation file for current language. Checks the languages
+	 * folder inside the Timeline plugin first, and then the default WordPress
+	 * languages folder.
 	 *
-	 * @since 1.0.0
+	 * Note that custom translation files inside the Timeline plugin folder
+	 * will be removed on Timeline updates. If you're creating custom
+	 * translation files, please use the global language folder.
 	 *
+	 * @since 0.1.0
+	 * @uses apply_filters() Calls 'timeline_locale' with the
+	 *                        {@link get_locale()} value
+	 * @uses load_textdomain() To load the textdomain
+	 * @return bool True on success, false on failure
+	 */
+	public function load_textdomain() {
+
+		// Traditional WordPress Plugin Locale Filter
+		$domain = $this->plugin_slug;
+		$locale = apply_filters( 'plugin_locale',  get_locale(), $domain );
+		$mofile = sprintf( '%1$s-%2$s.mo', $domain, $locale );
+
+		// Setup Paths To Current Locale File
+		$mofile_local  = $this->lang_dir . $mofile;
+		$mofile_global = WP_LANG_DIR . '/' . $domain . '/' . $mofile;
+
+		// Look In Global /wp-content/languages/timeline/ Folder
+		if ( file_exists( $mofile_global ) ) {
+
+			return load_textdomain( $domain, $mofile_global );
+
+		// Look In Local /wp-content/plugins/timeline/languages/ Folder
+		} elseif ( file_exists( $mofile_local ) ) {
+
+			return load_textdomain( $domain, $mofile_local );
+
+		}
+
+		// If Nothing Found
+		return false;
+
+	}
+
+	/**
+	 * Register The Timeline Post Type
+	 *
+	 * @since 0.1.0
 	 * @uses register_post_type()
-	 * @uses apply_filters() Calls 'timeline_archive' on 'has_archive' argument.
-	 * @uses apply_filters() Calls 'timeline_rewrite' on 'rewrite' argument.
+	 * @uses apply_filters()
 	 */
-	public function timeline_cpt_init() {
+	public static function setup_post_type() {
 
 		$labels = array(
-			'name'           => __( 'Timeline Entries', 'timeline' ),
-			'singular_name'  => __( 'Timeline Entry', 'timeline' ),
-			'menu_name'      => __( 'Timeline', 'timeline' ),
-			'name_admin_bar' => __( 'Timeline Entry', 'timeline' ),
-			'add_new'        => __( 'Add New', 'timeline' ),
-			'add_new_item'   => __( 'Add New Timeline Entry', 'timeline' ),
-			'edit_item'      => __( 'Edit Timeline Entry', 'timeline' ),
-			'new_item'       => __( 'New Timeline Entry', 'timeline' ),
-			'all_items'      => __( 'All Timelines', 'timeline' ),
-			'view_item'      => __( 'View Timeline Entry', 'timeline' ),
-			'items_archive'  => __( 'Timeline Archive', 'timelime' ),
-			'search_items'   => __( 'Search Timeline Entries', 'timeline' ),
+			'name'           => __( 'Timeline Entries',           'timeline' ),
+			'menu_name'      => __( 'Timeline',                   'timeline' ),
+			'singular_name'  => __( 'Timeline Entry',             'timeline' ),
+			'name_admin_bar' => __( 'Timeline Entry',             'timeline' ),
+			'add_new'        => __( 'Add New',                    'timeline' ),
+			'add_new_item'   => __( 'Add New Timeline Entry',     'timeline' ),
+			'edit_item'      => __( 'Edit Timeline Entry',        'timeline' ),
+			'new_item'       => __( 'New Timeline Entry',         'timeline' ),
+			'all_items'      => __( 'All Timelines',              'timeline' ),
+			'view_item'      => __( 'View Timeline Entry',        'timeline' ),
+			'items_archive'  => __( 'Timeline Archive',           'timelime' ),
+			'search_items'   => __( 'Search Timeline Entries',    'timeline' ),
 			'not_found'      => __( 'Timeline Entries Not Found', 'timeline' )
+		);
+
+		$supports = array(
+			'title',
+			'editor'
 		);
 
 		$args = array(
 			'labels'              => $labels,
-			'description'         => '',
+			'supports'            => $supports,
+			'description'         => __( 'Timeline', 'timeline' ),
 			'public'              => true,
 			'exclude_from_search' => true,
 			'publicly_queryable'  => true,
@@ -135,9 +232,8 @@ class mcwTimeline {
 			'show_in_admin_bar'   => true,
 			'menu_position'       => 22,
 			'menu_icon'           => '',
-			'supports'            => array( 'title', 'editor' ),
-			'has_archive'         => apply_filters( 'timeline_archive', false ),
-			'rewrite'             => apply_filters( 'timeline_rewrite', false ),
+			'has_archive'         => apply_filters( 'timeline_post_type_archive', false ),
+			'rewrite'             => apply_filters( 'timeline_post_type_rewrite', false ),
 			'query_var'           => false
 		);
 
@@ -146,32 +242,68 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Registers and enqueues the custom timeline.css style.
+	 * Enqueues Default Styles
 	 *
-	 * @since 1.0.0
+	 * Might never be registered if users theme supports Timeline?
 	 *
+	 * @since 0.1.0
 	 * @uses wp_enqueue_style()
-	 *
-	 * TODO: Check that you can use your own style(s) if wanted?
 	 */
-	public function register_timeline_css() {
+	public function setup_default_styles() {
 
-		wp_enqueue_style( 'timeline', plugins_url( '/css/timeline.css', __FILE__ ) );
+		wp_enqueue_style( 'timeline', plugins_url( '/assets/css/default.css', __FILE__ ) );
 
 	}
 
 	/**
-	 * Sets all of the posts added to the 'timeline' CPT with
-	 * a future timestamp to 'publish' when you publish them.
+	 * Include Specific Templates
 	 *
-	 * Thanks to Andrew Nacin for the snippet of code.
+	 * If you're using the built-in archive for Timeline then
+	 * we need to include our specific templates. We first do a
+	 * check in the Parent and Child theme directories before
+	 * including the relevant template supplied.
 	 *
+	 * @since 0.1.0
+	 * @uses locate_template()
+	 */
+	public function setup_default_templates( $template ) {
+
+		if ( is_post_type_archive( 'timeline' ) ) :
+
+			$template_name = 'archive-timeline.php';
+
+		elseif ( is_singular( 'timeline' ) ) :
+
+			$template_name = 'single-timeline.php';
+
+		else :
+
+			return $template; // Return early if it's not a template we care about.
+
+		endif;
+
+		$template = locate_template( array( $template_name ) );
+
+		if ( empty( $template ) )
+
+			$template = dirname( __FILE__ ) . '/templates/' . $template_name;
+
+		return $template;
+
+	}
+
+	/**
+	 * Alter Future Entries
+	 *
+	 * Sets all of the posts added to Timeline with a future
+	 * timestamp to 'publish' when you publish them. Thanks
+	 * to Andrew Nacin for the snippet of code.
+	 *
+	 * @since 0.1.0
 	 * @link http://wordpress.org/support/topic/publish-scheduled-posts-in-35#post-3561466
 	 * @link http://plugins.trac.wordpress.org/changeset/639040
-	 *
-	 * @since 1.0.0
 	 */
-	public function publish_future_timeline( $data ) {
+	public function setup_future_entries( $data ) {
 
 		if ( $data['post_status'] == 'future' && $data['post_type'] == 'timeline' )
 
@@ -182,13 +314,13 @@ class mcwTimeline {
 	}
 
 	/**
-	 * Changes the default order in which 'timeline' posts are
+	 * Changes the default order in which Timeline Entries are
 	 * displayed. We want to show the closest post/event first,
 	 * based on the date, and in an ascending order.
 	 *
-	 * @since 1.0.0
+	 * @since 0.1.0
 	 */
-	public function timeline_default_order( $query ) {
+	public function setup_default_query( $query ) {
 
 		if ( $query->get( 'post_type' ) == 'timeline' ) {
 
@@ -211,54 +343,19 @@ class mcwTimeline {
 	}
 
 	/**
-	 * If you're using the built-in archive for 'timeline' then
-	 * we need to include our specific templates. We first do a
-	 * check in the Parent and Child theme directories before
-	 * including the relevant template supplied.
+	 * Register [timeline] Shortcode
 	 *
-	 * @since 1.0.0
-	 *
-	 * @uses locate_template()
+	 * @since 0.1.0
 	 */
-	public function include_timeline_template( $template ) {
+	public function setup_shortcode_details( $atts ) {
 
-		if ( is_post_type_archive( 'timeline' ) ):
-
-			$template_name = 'archive-timeline.php';
-
-		elseif ( is_singular( 'timeline' ) ):
-
-			$template_name = 'single-timeline.php';
-
-		else:
-
-			return $template; // Return early if it's not a template we care about.
-
-		endif;
-
-		$template = locate_template( array( $template_name ) );
-
-		if ( empty( $template ) )
-
-			$template = dirname( __FILE__ ) . '/template/' . $template_name;
-
-		return $template;
-
-	}
-
-	/**
-	 * Registers the main functions of the [timeline] shortcode.
-	 *
-	 * @since 1.0.0
-	 */
-	public function timeline_shortcode_setup( $atts ) {
-
+		// Plenty More Attributes To Add
 		extract( shortcode_atts( array(
 			'type' => 'timeline',
 			'show' => -1,
-			/* First of many! */
 		), $atts ) );
 
+		// See How Else The Query Can Be Altered
 		$timeline = new WP_Query( array(
 			'post_type' => $type,
 			'posts_per_page' => $show,
@@ -294,6 +391,10 @@ class mcwTimeline {
 
 }
 
-new mcwTimeline();
+// Activation & Deactivation Hooks
+register_activation_hook( __FILE__, array( 'Timeline', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Timeline', 'deactivate' ) );
+
+Timeline::instance();
 
 ?>
