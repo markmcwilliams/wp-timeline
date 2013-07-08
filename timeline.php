@@ -111,8 +111,8 @@ final class Timeline {
 	public static function instance() {
 
 		// Set The Single Instance If It Hasn't Been Set Already
-		if ( null == self::$instance ) {
-			self::$instance = new Timeline;
+		if ( self::$instance == null ) {
+			self::$instance = new self;
 		}
 
 		return self::$instance;
@@ -165,7 +165,7 @@ final class Timeline {
 
 		// Traditional WordPress Plugin Locale Filter
 		$domain = $this->plugin_slug;
-		$locale = apply_filters( 'plugin_locale',  get_locale(), $domain );
+		$locale = apply_filters( 'timeline_locale',  get_locale(), $domain );
 		$mofile = sprintf( '%1$s-%2$s.mo', $domain, $locale );
 
 		// Setup Paths To Current Locale File
@@ -232,8 +232,8 @@ final class Timeline {
 			'show_in_admin_bar'   => true,
 			'menu_position'       => 22,
 			'menu_icon'           => '',
-			'has_archive'         => apply_filters( 'timeline_post_type_archive', false ),
-			'rewrite'             => apply_filters( 'timeline_post_type_rewrite', false ),
+			'has_archive'         => apply_filters( 'timeline_archive_variable', false ),
+			'rewrite'             => apply_filters( 'timeline_rewrite_variable', false ),
 			'query_var'           => false
 		);
 
@@ -351,16 +351,24 @@ final class Timeline {
 
 		// Plenty More Attributes To Add
 		extract( shortcode_atts( array(
-			'type' => 'timeline',
-			'show' => -1,
+			'type'  => 'timeline',
+			'show'  => -1,
+			'year'  => null,
+			'month' => null,
+			'day'   => null,
+			'week'  => null,
 		), $atts ) );
 
 		// See How Else The Query Can Be Altered
 		$timeline = new WP_Query( array(
-			'post_type' => $type,
+			'post_type'      => $type,
 			'posts_per_page' => $show,
-			'order' => 'ASC',
-			'orderby' => 'date',
+			'year'           => $year,
+			'monthnum'       => $month,
+			'day'            => $day,
+			'w'              => $week,
+			'order'          => 'ASC',
+			'orderby'        => 'date',
 		) );
 
 		$output = '<div class="timeline">';
