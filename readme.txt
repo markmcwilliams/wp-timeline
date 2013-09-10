@@ -1,4 +1,4 @@
-=== Timeline ===
+=== Timeline (Experimental) ===
 Contributors: markmcwilliams 
 Tags: timeline, event
 Requires at least: 3.5
