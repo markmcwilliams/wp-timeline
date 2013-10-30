@@ -73,9 +73,6 @@ final class Timeline {
 		// Load Plugins Text Domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-		// Timeline Post Type
-		add_action( 'init', array( $this, 'setup_post_type' ) );
-
 		// Register If Theme Doesn't Support Timeline
 		if ( ! current_theme_supports( 'timeline' ) ) {
 
@@ -186,58 +183,6 @@ final class Timeline {
 
 		// If Nothing Found
 		return false;
-
-	}
-
-	/**
-	 * Register The Timeline Post Type
-	 *
-	 * @since 0.1.0
-	 * @uses register_post_type()
-	 * @uses apply_filters()
-	 */
-	public static function setup_post_type() {
-
-		$labels = array(
-			'name'           => __( 'Timeline Entries',           'timeline' ),
-			'menu_name'      => __( 'Timeline',                   'timeline' ),
-			'singular_name'  => __( 'Timeline Entry',             'timeline' ),
-			'name_admin_bar' => __( 'Timeline Entry',             'timeline' ),
-			'add_new'        => __( 'Add New',                    'timeline' ),
-			'add_new_item'   => __( 'Add New Timeline Entry',     'timeline' ),
-			'edit_item'      => __( 'Edit Timeline Entry',        'timeline' ),
-			'new_item'       => __( 'New Timeline Entry',         'timeline' ),
-			'all_items'      => __( 'All Timelines',              'timeline' ),
-			'view_item'      => __( 'View Timeline Entry',        'timeline' ),
-			'items_archive'  => __( 'Timeline Archive',           'timelime' ),
-			'search_items'   => __( 'Search Timeline Entries',    'timeline' ),
-			'not_found'      => __( 'Timeline Entries Not Found', 'timeline' )
-		);
-
-		$supports = array(
-			'title',
-			'editor'
-		);
-
-		$args = array(
-			'labels'              => $labels,
-			'supports'            => $supports,
-			'description'         => __( 'Timeline', 'timeline' ),
-			'public'              => true,
-			'exclude_from_search' => true,
-			'publicly_queryable'  => true,
-			'show_ui'             => true,
-			'show_in_nav_menus'   => false,
-			'show_in_menu'        => true,
-			'show_in_admin_bar'   => true,
-			'menu_position'       => 22,
-			'menu_icon'           => '',
-			'has_archive'         => apply_filters( 'timeline_archive_variable', false ),
-			'rewrite'             => apply_filters( 'timeline_rewrite_variable', false ),
-			'query_var'           => false
-		);
-
-		register_post_type( 'timeline', $args );
 
 	}
 

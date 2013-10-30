@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 === Timeline (Master) ===
+=======
+=== Timeline (Experimental) ===
+>>>>>>> origin/kappa
 Contributors: markmcwilliams 
 Tags: timeline, event
 Requires at least: 3.5
